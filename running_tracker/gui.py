@@ -2,9 +2,9 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import datetime
 
-from data_handler import DataHandler
-from visualization import Visualization
-from stats_engine import StatsEngine
+from .data_handler import DataHandler
+from .visualization import Visualization
+from .stats_engine import StatsEngine
 
 
 class StatsWindow(tk.Toplevel):
