@@ -7,6 +7,48 @@ from .visualization import Visualization
 from .stats_engine import StatsEngine
 
 
+class RunsWindow(tk.Toplevel):
+    """Display individual runs and allow removal."""
+
+    def __init__(self, master, data_handler: DataHandler):
+        super().__init__(master)
+        self.title("Runs")
+        self.resizable(False, False)
+        self.data_handler = data_handler
+
+        frame = ttk.Frame(self, padding=10)
+        frame.pack(fill=tk.BOTH, expand=True)
+
+        columns = ("date", "distance", "time")
+        self.tree = ttk.Treeview(frame, columns=columns, show="headings")
+        for col in columns:
+            self.tree.heading(col, text=col.title())
+        self.tree.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Button(frame, text="Remove Selected", command=self._remove_selected).pack(pady=5)
+
+        self._populate()
+
+    def _populate(self):
+        for row in self.tree.get_children():
+            self.tree.delete(row)
+        runs = self.data_handler.get_runs()
+        for idx, run in enumerate(runs):
+            self.tree.insert("", tk.END, iid=str(idx), values=(run["date"], run["distance"], run["time"]))
+
+    def _remove_selected(self):
+        sel = self.tree.selection()
+        if not sel:
+            messagebox.showinfo("Remove Run", "No run selected")
+            return
+        idx = int(sel[0])
+        try:
+            self.data_handler.remove_run(idx)
+            self._populate()
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
+
+
 class StatsWindow(tk.Toplevel):
     """Display statistics in a simple table."""
 
@@ -56,6 +98,7 @@ class RunningTrackerApp:
         ttk.Button(frame, text="Add Run", command=self.add_run).grid(column=0, row=3, columnspan=2, pady=10)
         ttk.Button(frame, text="Show Stats", command=self.show_stats).grid(column=0, row=4, columnspan=2, pady=5)
         ttk.Button(frame, text="Show Graphs", command=self.show_graphs).grid(column=0, row=5, columnspan=2)
+        ttk.Button(frame, text="View Runs", command=self.show_runs).grid(column=0, row=6, columnspan=2, pady=5)
 
     def add_run(self):
         try:
@@ -76,6 +119,9 @@ class RunningTrackerApp:
 
     def show_graphs(self):
         self.visualization.show_plots()
+
+    def show_runs(self):
+        RunsWindow(self.root, self.data_handler)
 
     def run(self):
         self.root.mainloop()
