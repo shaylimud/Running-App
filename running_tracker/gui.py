@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import datetime
+from .assets import load_logo_b64
 
 from .data_handler import DataHandler
 from .visualization import Visualization
@@ -72,33 +73,71 @@ class RunningTrackerApp:
         self.root = tk.Tk()
         self.root.title("Running Tracker")
         ttk.Style().theme_use("clam")
+        self._setup_style()
+        self.logo_image = tk.PhotoImage(data=load_logo_b64())
+        self.root.iconphoto(False, self.logo_image)
         self.data_handler = DataHandler()
         self.stats_engine = StatsEngine(self.data_handler)
         self.visualization = Visualization(self.data_handler)
         self._build_ui()
 
+    def _setup_style(self):
+        style = ttk.Style()
+        bg = "#e7f0fd"
+        self.root.configure(background=bg)
+        style.configure("App.TFrame", background=bg)
+        style.configure("TLabel", background=bg, font=("Segoe UI", 11))
+        style.configure(
+            "Header.TLabel",
+            background=bg,
+            foreground="#2c3e50",
+            font=("Segoe UI", 16, "bold"),
+        )
+        style.configure(
+            "TButton",
+            background="#4a90e2",
+            foreground="white",
+            font=("Segoe UI", 10, "bold"),
+            padding=6,
+        )
+        style.map(
+            "TButton",
+            background=[("active", "#357ABD")],
+            foreground=[("active", "white")],
+        )
+        style.configure("TEntry", padding=5)
+
     def _build_ui(self):
-        frame = ttk.Frame(self.root, padding=20)
+        frame = ttk.Frame(self.root, padding=20, style="App.TFrame")
         frame.grid(sticky="nsew")
         self.root.columnconfigure(0, weight=1)
         frame.columnconfigure(1, weight=1)
 
-        ttk.Label(frame, text="Date (YYYY-MM-DD)").grid(column=0, row=0, sticky=tk.W, pady=5)
+        header = ttk.Label(
+            frame,
+            text="Running Tracker",
+            image=self.logo_image,
+            compound="left",
+            style="Header.TLabel",
+        )
+        header.grid(column=0, row=0, columnspan=2, pady=(0, 10))
+
+        ttk.Label(frame, text="Date (YYYY-MM-DD)").grid(column=0, row=1, sticky=tk.W, pady=5)
         self.date_entry = ttk.Entry(frame)
-        self.date_entry.grid(column=1, row=0, sticky="ew", pady=5)
+        self.date_entry.grid(column=1, row=1, sticky="ew", pady=5)
 
-        ttk.Label(frame, text="Distance (km)").grid(column=0, row=1, sticky=tk.W, pady=5)
+        ttk.Label(frame, text="Distance (km)").grid(column=0, row=2, sticky=tk.W, pady=5)
         self.distance_entry = ttk.Entry(frame)
-        self.distance_entry.grid(column=1, row=1, sticky="ew", pady=5)
+        self.distance_entry.grid(column=1, row=2, sticky="ew", pady=5)
 
-        ttk.Label(frame, text="Time (HH:MM:SS)").grid(column=0, row=2, sticky=tk.W, pady=5)
+        ttk.Label(frame, text="Time (HH:MM:SS)").grid(column=0, row=3, sticky=tk.W, pady=5)
         self.time_entry = ttk.Entry(frame)
-        self.time_entry.grid(column=1, row=2, sticky="ew", pady=5)
+        self.time_entry.grid(column=1, row=3, sticky="ew", pady=5)
 
-        ttk.Button(frame, text="Add Run", command=self.add_run).grid(column=0, row=3, columnspan=2, pady=10)
-        ttk.Button(frame, text="Show Stats", command=self.show_stats).grid(column=0, row=4, columnspan=2, pady=5)
-        ttk.Button(frame, text="Show Graphs", command=self.show_graphs).grid(column=0, row=5, columnspan=2)
-        ttk.Button(frame, text="View Runs", command=self.show_runs).grid(column=0, row=6, columnspan=2, pady=5)
+        ttk.Button(frame, text="Add Run", command=self.add_run).grid(column=0, row=4, columnspan=2, pady=10)
+        ttk.Button(frame, text="Show Stats", command=self.show_stats).grid(column=0, row=5, columnspan=2, pady=5)
+        ttk.Button(frame, text="Show Graphs", command=self.show_graphs).grid(column=0, row=6, columnspan=2)
+        ttk.Button(frame, text="View Runs", command=self.show_runs).grid(column=0, row=7, columnspan=2, pady=5)
 
     def add_run(self):
         try:
