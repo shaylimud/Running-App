@@ -1,0 +1,6 @@
+runs.csv
+
+dist/
+build/
+__pycache__/
+*.spec
