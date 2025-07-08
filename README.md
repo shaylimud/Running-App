@@ -20,7 +20,8 @@ python main.py
 ```
 
 A window will appear where you can enter the date, distance in km and the time
-for each run. Basic statistics and a distance-over-time graph can be displayed.
+for each run. Basic statistics now open in a separate window and are displayed
+in a small table. You can also view a distance-over-time graph.
 
 ### macOS clickable launch script
 
