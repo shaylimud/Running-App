@@ -2,6 +2,8 @@
 
 This is a simple desktop application for tracking your running sessions.
 Runs are stored in a local CSV file and basic statistics and graphs are available.
+The interface now sports a more colorful theme and a small built‑in logo so it
+feels a bit more like a modern web app.
 
 ## Requirements
 - Python 3
