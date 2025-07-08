@@ -3,4 +3,5 @@ runs.csv
 dist/
 build/
 __pycache__/
+running_tracker/__pycache__/
 *.spec
