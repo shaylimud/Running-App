@@ -7,6 +7,6 @@ if ! command -v pyinstaller >/dev/null 2>&1; then
     pip3 install --user pyinstaller
 fi
 
-pyinstaller --windowed --name "RunningTracker" main.py
+pyinstaller --windowed --name "RunningTracker" running_tracker/main.py
 
 echo "App built at dist/RunningTracker.app"
