@@ -16,7 +16,7 @@ pip install matplotlib
 ## Usage
 Run the application using:
 ```bash
-python main.py
+python -m running_tracker.main
 ```
 
 A window will appear where you can enter the date, distance in km and the time
